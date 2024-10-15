@@ -1,0 +1,8 @@
+# cat=Setting; type=boolean; label=Extend the Feature class of the core with the additional features
+xclass_core_features = true
+
+# cat=Setting; type=boolean; label=Extend the Feature class of extbase with the additional features
+xclass_extbase_features = true
+
+# cat=Setting; type=boolean; label=Add the feature viewhelper in the fluid namespace
+fluid_viewhelper = true
