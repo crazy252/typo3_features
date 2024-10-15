@@ -1,6 +1,6 @@
 <?php
 
-namespace Crazy252\Typo3Features\Contracts;
+namespace Crazy252\Typo3Features\Features;
 
 interface FeatureInterface
 {
