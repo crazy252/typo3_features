@@ -14,12 +14,12 @@ use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 class Feature
 {
     /**
-     * @param string $featureName
+     * @param string $featureNames
      * @return bool
      */
-    public function enabled($featureName)
+    public function enabled($featureNames)
     {
-        $features = GeneralUtility::trimExplode(',', $featureName);
+        $features = GeneralUtility::trimExplode(',', $featureNames);
         // no feature
         if (count($features) === 0) {
             return false;
@@ -30,16 +30,16 @@ class Feature
         }
 
         // more than one feature
-        $result = [];
+        $featuresList = [];
         foreach ($features as $feature) {
-            $result[$feature] = $this->isFeatureEnabled($feature);
+            $featuresList[$feature] = $this->isFeatureEnabled($feature);
         }
 
-        $resultEnabled = array_filter($result, function ($res) {
+        $featuresEnabled = array_filter($featuresList, function ($res) {
             return $res === true;
         });
 
-        return count($result) === count($resultEnabled);
+        return count($featuresList) === count($featuresEnabled);
     }
 
     /**
@@ -55,10 +55,11 @@ class Feature
 
         // features from the configuration
         if (isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['features'][$featureName])) {
-            return $GLOBALS['TYPO3_CONF_VARS']['SYS']['features'][$featureName];
+            return (bool)$GLOBALS['TYPO3_CONF_VARS']['SYS']['features'][$featureName];
         }
 
         // features in database with special other handling
+        /** @var FeatureRepository $featureRepository */
         $featureRepository = $this->initClass(FeatureRepository::class);
         $feature = $featureRepository->getFeature($featureName);
 
