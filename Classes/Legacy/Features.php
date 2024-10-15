@@ -2,7 +2,7 @@
 
 namespace Crazy252\Typo3Features\Legacy;
 
-use Crazy252\Typo3Features\Service\Feature;
+use Crazy252\Typo3Features\Configuration\Feature;
 use TYPO3\CMS\Core\Configuration\Features as CoreFeatures;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 

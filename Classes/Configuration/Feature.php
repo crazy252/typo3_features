@@ -1,6 +1,6 @@
 <?php
 
-namespace Crazy252\Typo3Features\Service;
+namespace Crazy252\Typo3Features\Configuration;
 
 use Crazy252\Typo3Features\Contracts\FeatureInterface;
 use Crazy252\Typo3Features\Domain\Model\Feature as ModelFeature;
