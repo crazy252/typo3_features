@@ -19,10 +19,6 @@ features are deployed smoothly and efficiently.
 - User and Group check for Features (Frontend & Backend)
 - Compatible with TYPO3 7-13
 
-## Setup
-
-Installtion via composer
-
 ```shell
 composer require crazy252/typo3_features
 ```
