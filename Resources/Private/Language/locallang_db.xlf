@@ -19,7 +19,19 @@
 				<source>PHP-Class</source>
 			</trans-unit>
 			<trans-unit id="tx_typo3features_domain_model_feature.class_string.desc" resname="tx_typo3features_domain_model_feature.class_string.desc">
-				<source>A namespace path to a PHP-class for feature related checks</source>
+				<source>A namespace path to a PHP-class for feature related checks (e.g. \Vendor\ExampleExtension\Features\NewDesign)</source>
+			</trans-unit>
+			<trans-unit id="tx_typo3features_domain_model_feature.fe_users" resname="tx_typo3features_domain_model_feature.fe_users">
+				<source>Users (Frontend)</source>
+			</trans-unit>
+			<trans-unit id="tx_typo3features_domain_model_feature.fe_groups" resname="tx_typo3features_domain_model_feature.fe_groups">
+				<source>Groups (Frontend)</source>
+			</trans-unit>
+			<trans-unit id="tx_typo3features_domain_model_feature.be_users" resname="tx_typo3features_domain_model_feature.be_users">
+				<source>Users (Backend)</source>
+			</trans-unit>
+			<trans-unit id="tx_typo3features_domain_model_feature.be_groups" resname="tx_typo3features_domain_model_feature.be_groups">
+				<source>Groups (Backend)</source>
 			</trans-unit>
 		</body>
 	</file>

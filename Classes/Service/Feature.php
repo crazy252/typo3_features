@@ -3,9 +3,13 @@
 namespace Crazy252\Typo3Features\Service;
 
 use Crazy252\Typo3Features\Contracts\FeatureInterface;
+use Crazy252\Typo3Features\Domain\Model\Feature as ModelFeature;
 use Crazy252\Typo3Features\Domain\Repository\FeatureRepository;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 
 class Feature
 {
@@ -59,7 +63,11 @@ class Feature
         $feature = $featureRepository->getFeature($featureName);
 
         // check if feature is found
-        if (!is_array($feature) or !is_object($feature)) {
+        if (!($feature instanceof ModelFeature) or !is_object($feature)) {
+            return false;
+        }
+        // check if feature is hidden
+        if ($feature->getHidden() === true) {
             return false;
         }
 
@@ -69,9 +77,47 @@ class Feature
             return ($featureCheck ? $featureCheck->verdict() : false);
         }
 
-        // TODO: add FE/BE-Groups for checking
+        // get frontend user session
+        $userFrontend = $this->getFrontendUserSession();
+        if ($userFrontend and $userFrontend->user) {
+            // check assigned frontend users of feature against frontend user
+            if (is_string($feature->getFeUsers()) and strlen($feature->getFeUsers()) > 0) {
+                $feUsers = GeneralUtility::trimExplode(',', $feature->getFeUsers(), true);
+                return in_array($userFrontend->user['uid'], $feUsers, true);
+            }
 
-        return $feature->getHidden();
+            // check assigned frontend user groups of feature against frontend user
+            if (is_string($feature->getFeGroups()) and strlen($feature->getFeGroups()) > 0) {
+                $feGroups = GeneralUtility::trimExplode(',', $feature->getFeGroups(), true);
+                $userFrontendGroupIds = array_keys($userFrontend->userGroups);
+
+                foreach ($userFrontendGroupIds as $userFrontendGroupId) {
+                    return in_array($userFrontendGroupId, $feGroups, true);
+                }
+            }
+        }
+
+        // get backend user session
+        $userBackend = $this->getBackendUserSession();
+        if ($userBackend and $userBackend->user) {
+            // check assigned backend users of feature against backend user
+            if (is_string($feature->getBeUsers()) and strlen($feature->getBeUsers()) > 0) {
+                $beUsers = GeneralUtility::trimExplode(',', $feature->getBeUsers(), true);
+                return in_array($userBackend->user['uid'], $beUsers, true);
+            }
+
+            // check assigned backend user groups of feature against backend user
+            if (is_string($feature->getBeGroups()) and strlen($feature->getBeGroups()) > 0) {
+                $beGroups = GeneralUtility::trimExplode(',', $feature->getBeGroups(), true);
+                $userBackendGroupIds = array_keys($userBackend->userGroups);
+
+                foreach ($userBackendGroupIds as $userBackendGroupId) {
+                    return in_array($userBackendGroupId, $beGroups, true);
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -88,18 +134,42 @@ class Feature
             return GeneralUtility::makeInstance($targetClass);
         }
         // Use ObjectManager for DI
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        return $objectManager->get($targetClass);
+        return GeneralUtility::makeInstance(ObjectManager::class)->get($targetClass);
     }
 
-    /*private function getFrontendUserSession()
+    /**
+     * @return FrontendUserAuthentication|null
+     */
+    private function getFrontendUserSession()
     {
-        if (class_exists(Context::class)) {
-            return GeneralUtility::makeInstance(Context::class)->getAspect('frontend.user');
+        if (class_exists(Context::class) and $this->getContext()->hasAspect('frontend.user')) {
+            return $this->getContext()->getAspect('frontend.user');
         }
-        if (!isset($GLOBALS['TSFE']) || !$GLOBALS['TSFE']->loginUser) {
+        if (!isset($GLOBALS['TSFE']) or !isset($GLOBALS['TSFE']->fe_user)) {
             return null;
         }
         return $GLOBALS['TSFE']->fe_user;
-    }*/
+    }
+
+    /**
+     * @return BackendUserAuthentication|null
+     */
+    private function getBackendUserSession()
+    {
+        if (class_exists(Context::class) and $this->getContext()->hasAspect('backend.user')) {
+            return $this->getContext()->getAspect('backend.user');
+        }
+        if (!isset($GLOBALS['BE_USER'])) {
+            return null;
+        }
+        return $GLOBALS['BE_USER'];
+    }
+
+    /**
+     * @return Context
+     */
+    private function getContext()
+    {
+        return GeneralUtility::makeInstance(Context::class);
+    }
 }

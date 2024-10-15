@@ -10,17 +10,17 @@ class Feature extends AbstractEntity
      * @var string
      */
     protected $key = '';
-    
+
     /**
      * @var string
      */
     protected $name = '';
-    
+
     /**
      * @var string
      */
     protected $description = '';
-    
+
     /**
      * @var string
      */
@@ -30,6 +30,26 @@ class Feature extends AbstractEntity
      * @var bool
      */
     protected $hidden = false;
+
+    /**
+     * @var string
+     */
+    protected $feUsers = '';
+
+    /**
+     * @var string
+     */
+    protected $feGroups = '';
+
+    /**
+     * @var string
+     */
+    protected $beUsers = '';
+
+    /**
+     * @var string
+     */
+    protected $beGroups = '';
 
     /**
      * @return string
@@ -109,5 +129,69 @@ class Feature extends AbstractEntity
     public function setHidden($hidden)
     {
         $this->hidden = $hidden;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFeUsers()
+    {
+        return $this->feUsers;
+    }
+
+    /**
+     * @param string $feUsers
+     */
+    public function setFeUsers($feUsers)
+    {
+        $this->feUsers = $feUsers;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFeGroups()
+    {
+        return $this->feGroups;
+    }
+
+    /**
+     * @param string $feGroups
+     */
+    public function setFeGroups($feGroups)
+    {
+        $this->feGroups = $feGroups;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBeUsers()
+    {
+        return $this->beUsers;
+    }
+
+    /**
+     * @param string $beUsers
+     */
+    public function setBeUsers($beUsers)
+    {
+        $this->beUsers = $beUsers;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBeGroups()
+    {
+        return $this->beGroups;
+    }
+
+    /**
+     * @param string $beGroups
+     */
+    public function setBeGroups($beGroups)
+    {
+        $this->beGroups = $beGroups;
     }
 }

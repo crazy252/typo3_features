@@ -12,6 +12,8 @@ return [
         'delete' => 'deleted',
         'enablecolumns' => [
             'disabled' => 'hidden',
+            'fe_group' => 'fe_groups',
+            'be_group' => 'be_groups',
         ],
         'iconfile' => 'EXT:typo3_features/Resources/Public/Icons/feature.svg',
     ],
@@ -20,8 +22,29 @@ return [
     ],
     'types' => [
         '0' => [
-            'showitem' => 'key, name, description, class_string',
+            'showitem' => implode(',', [
+                implode(',', [
+                    '--div--;LLL:EXT:typo3_features/Resources/Private/Language/locallang_tabs.xlf:general',
+                    'key,name,description,class_string',
+                ]),
+                implode(',', [
+                    '--div--;LLL:EXT:typo3_features/Resources/Private/Language/locallang_tabs.xlf:access',
+                    'hidden',
+                    '--palette--;;timeRestriction'
+                ]),
+                implode(',', [
+                    '--div--;LLL:EXT:typo3_features/Resources/Private/Language/locallang_tabs.xlf:accessFrontend',
+                    'fe_users,fe_groups',
+                ]),
+                implode(',', [
+                    '--div--;LLL:EXT:typo3_features/Resources/Private/Language/locallang_tabs.xlf:accessBackend',
+                    'be_users,be_groups',
+                ]),
+            ])
         ],
+    ],
+    'palettes' => [
+        'timeRestriction' => ['showitem' => 'starttime, endtime'],
     ],
     'columns' => [
         'hidden' => [
@@ -58,30 +81,36 @@ return [
                 ],
             ],
         ],
-        'fe_group' => [
+        'fe_users' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.fe_group',
+            'label' => $LLL . '.fe_users',
             'config' => [
-                'type' => 'select',
-                'renderType' => 'selectMultipleSideBySide',
-                'size' => 5,
-                'maxitems' => 20,
-                'items' => [
-                    [
-                        'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hide_at_login',
-                        'value' => -1,
-                    ],
-                    [
-                        'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.any_login',
-                        'value' => -2,
-                    ],
-                    [
-                        'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.usergroups',
-                        'value' => '--div--',
-                    ],
-                ],
-                'exclusiveKeys' => '-1,-2',
-                'foreign_table' => 'fe_groups',
+                'type' => 'group',
+                'allowed' => 'fe_users',
+            ],
+        ],
+        'fe_groups' => [
+            'exclude' => true,
+            'label' => $LLL . '.fe_groups',
+            'config' => [
+                'type' => 'group',
+                'allowed' => 'fe_groups',
+            ],
+        ],
+        'be_users' => [
+            'exclude' => true,
+            'label' => $LLL . '.be_users',
+            'config' => [
+                'type' => 'group',
+                'allowed' => 'be_users',
+            ],
+        ],
+        'be_groups' => [
+            'exclude' => true,
+            'label' => $LLL . '.be_groups',
+            'config' => [
+                'type' => 'group',
+                'allowed' => 'be_groups',
             ],
         ],
 
